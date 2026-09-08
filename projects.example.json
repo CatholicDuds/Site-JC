@@ -1,0 +1,10 @@
+{
+  "projects": [
+    {
+      "sector": "Cimento",
+      "company": "NOME DA EMPRESA",
+      "description": "Descrição real do projeto realizado pela RBN.",
+      "scope": "CLP, supervisão, redes, IHM, integração..."
+    }
+  ]
+}

@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="RBN Automação Industrial — engenharia, implantação e integração de sistemas de automação.">
+<title>RBN Automação Industrial</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+
+<style>
+:root {
+  --g9:#062F1A; --g8:#094D2B; --g7:#0B6E3D; --g6:#0E8A4D; --g5:#12A65E;
+  --g2:#A8D4B0; --g1:#E8F5EC; --g0:#F2F9F4;
+  --gold:#D4A843; --gold-l:#E8C76C;
+  --tp:#0F1410; --ts:#3D4841; --tm:#6B7670;
+  --sf:#FFFFFF; --sa:#F7FAF8; --st:#EDF4EE;
+  --bd:#DCE5DE; --bs:#B8C7BB;
+  --sh-s:0 1px 2px rgba(6,47,26,.04); --sh-m:0 4px 16px rgba(6,47,26,.08); --sh-l:0 12px 40px rgba(6,47,26,.12);
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --g9:#02140A;--g8:#062F1A;--g7:#0E8A4D;--g6:#12A65E;--g5:#16C770;
+  --g2:#5EBD7A;--g1:#0D2818;--g0:#0A1F14;
+  --gold:#E0B84E;--gold-l:#F0CB6A;
+  --tp:#E8EDE9;--ts:#B0BBB4;--tm:#7A857F;
+  --sf:#0E1410;--sa:#131916;--st:#16211A;
+  --bd:#1F2D23;--bs:#2A3A2E;
+  --sh-s:0 1px 2px rgba(0,0,0,.3);--sh-m:0 4px 16px rgba(0,0,0,.4);--sh-l:0 12px 40px rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  --g9:#02140A;--g8:#062F1A;--g7:#0E8A4D;--g6:#12A65E;--g5:#16C770;
+  --g2:#5EBD7A;--g1:#0D2818;--g0:#0A1F14;
+  --gold:#E0B84E;--gold-l:#F0CB6A;
+  --tp:#E8EDE9;--ts:#B0BBB4;--tm:#7A857F;
+  --sf:#0E1410;--sa:#131916;--st:#16211A;
+  --bd:#1F2D23;--bs:#2A3A2E;
+  --sh-s:0 1px 2px rgba(0,0,0,.3);--sh-m:0 4px 16px rgba(0,0,0,.4);--sh-l:0 12px 40px rgba(0,0,0,.5);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+*::selection{background:var(--g6);color:#fff}
+html{scroll-behavior:smooth}
+body{background:var(--sf);color:var(--tp);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--g6);text-decoration:none;transition:color .2s}
+a:hover{color:var(--g5)}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--g5);outline-offset:3px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+
+/* ──── SCROLL PROGRESS ──── */
+.scroll-progress{position:fixed;top:0;left:0;height:3px;background:var(--g5);z-index:1001;width:0;transition:width .1s linear}
+
+/* ──── NAV ──── */
+.nav{position:fixed;top:3px;left:0;right:0;z-index:1000;background:var(--sf);border-bottom:1px solid var(--bd);transition:box-shadow .3s,background .3s}
+.nav.scrolled{box-shadow:var(--sh-m)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:21px;color:var(--g7);text-decoration:none}
+.nav-mark{width:34px;height:34px;background:var(--g7);border-radius:5px;display:flex;align-items:center;justify-content:center}
+.nav-mark svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav-links{display:flex;gap:6px;list-style:none}
+.nav-links a{display:block;padding:8px 14px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--ts);border-radius:4px;transition:background .2s,color .2s}
+.nav-links a:hover,.nav-links a.active{background:var(--g1);color:var(--g7)}
+.nav-cta{padding:8px 20px;background:var(--g7);color:#fff;border:none;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.04em;text-transform:uppercase;transition:background .2s,transform .15s}
+.nav-cta:hover{background:var(--g6);transform:translateY(-1px)}
+.burger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:8px}
+.burger span{display:block;width:22px;height:2px;background:var(--tp);border-radius:1px;transition:.3s}
+.burger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+/* ──── HERO ──── */
+.hero{margin-top:63px;position:relative;overflow:hidden;background:var(--g8);color:#fff}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.12}
+.hero-content{position:relative;z-index:1;padding:80px 0 72px;display:grid;grid-template-columns:1fr 340px;gap:48px;align-items:center}
+.hero-eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.hero-eyebrow::before{content:'';width:24px;height:1px;background:var(--gold)}
+.hero h1{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(38px,5.5vw,60px);line-height:1.05;text-wrap:balance;margin-bottom:20px}
+.hero-desc{font-size:17px;line-height:1.75;opacity:.88;max-width:520px;margin-bottom:28px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:15px;letter-spacing:.04em;text-transform:uppercase;border:none;transition:all .2s}
+.btn-primary{background:#fff;color:var(--g8)}
+.btn-primary:hover{background:var(--gold-l);color:var(--g9);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.35)}
+.btn-outline:hover{border-color:#fff;background:rgba(255,255,255,.08)}
+.hero-stats{display:flex;flex-direction:column;gap:20px}
+.hero-stat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:20px 24px;backdrop-filter:blur(4px)}
+.hero-stat-num{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:40px;line-height:1;color:var(--gold);font-variant-numeric:tabular-nums}
+.hero-stat-num .suffix{font-size:22px;color:var(--g2)}
+.hero-stat-label{font-size:13px;color:rgba(255,255,255,.7);margin-top:4px;letter-spacing:.02em}
+
+/* ──── SECTION COMMON ──── */
+.section{padding:80px 0}
+.section--alt{background:var(--sa)}
+.section--tint{background:var(--st)}
+.section--dark{background:var(--g8);color:#fff}
+.section--dark .sec-eyebrow{color:var(--gold)}
+.section--dark .sec-title{color:#fff}
+.section--dark .sec-lead{color:rgba(255,255,255,.75)}
+.sec-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--g6);margin-bottom:6px}
+.sec-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:clamp(30px,4vw,42px);line-height:1.1;text-wrap:balance;color:var(--tp);margin-bottom:14px}
+.sec-lead{font-size:17px;line-height:1.8;color:var(--ts);max-width:620px;margin-bottom:40px}
+.sec-header{text-align:center;display:flex;flex-direction:column;align-items:center}
+.sec-header .sec-lead{margin-left:auto;margin-right:auto}
+
+/* ──── ABOUT ──── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.about-text p{margin-bottom:16px;color:var(--ts);line-height:1.8}
+.about-text p:last-child{margin-bottom:0}
+.about-highlights{display:flex;flex-direction:column;gap:16px}
+.highlight{display:flex;gap:16px;padding:20px;background:var(--sf);border:1px solid var(--bd);border-radius:6px;box-shadow:var(--sh-s);transition:transform .2s,box-shadow .2s}
+.highlight:hover{transform:translateY(-2px);box-shadow:var(--sh-m)}
+.highlight-icon{width:44px;height:44px;background:var(--g1);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.highlight-icon svg{width:22px;height:22px;stroke:var(--g7);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.highlight h4{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;color:var(--tp);margin-bottom:4px}
+.highlight p{font-size:14px;color:var(--tm);line-height:1.6}
+
+/* ──── SERVICES ──── */
+.services-tabs{display:flex;gap:4px;margin-bottom:32px;border-bottom:2px solid var(--bd);padding-bottom:0}
+.srv-tab{padding:12px 24px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:15px;letter-spacing:.04em;text-transform:uppercase;background:none;border:none;color:var(--tm);border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .2s,border-color .2s}
+.srv-tab:hover{color:var(--tp)}
+.srv-tab.active{color:var(--g7);border-bottom-color:var(--g7)}
+.srv-panel{display:none}
+.srv-panel.active{display:block}
+.srv-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.srv-card{padding:24px;background:var(--sf);border:1px solid var(--bd);border-radius:6px;display:flex;align-items:start;gap:14px;transition:border-color .2s,box-shadow .2s}
+.srv-card:hover{border-color:var(--g6);box-shadow:var(--sh-m)}
+.srv-card-dot{width:8px;height:8px;border-radius:50%;background:var(--g6);margin-top:7px;flex-shrink:0}
+.srv-card h4{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:16px;color:var(--tp);margin-bottom:4px}
+.srv-card p{font-size:13.5px;color:var(--tm);line-height:1.6}
+
+/* ──── SECTORS ──── */
+.sectors-cloud{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:32px}
+.sector{padding:10px 22px;background:var(--g1);color:var(--g7);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:15px;border-radius:4px;letter-spacing:.02em;transition:all .25s;cursor:default;border:1px solid transparent;position:relative;overflow:hidden}
+.sector::before{content:'';position:absolute;inset:0;background:var(--g7);transform:scaleX(0);transform-origin:left;transition:transform .3s;z-index:0}
+.sector span{position:relative;z-index:1;transition:color .3s}
+.sector:hover::before{transform:scaleX(1)}
+.sector:hover span{color:#fff}
+.sector:hover{border-color:var(--g7);box-shadow:var(--sh-s)}
+
+/* ──── TIMELINE ──── */
+.timeline{position:relative;max-width:700px;margin:40px auto 0}
+.timeline::before{content:'';position:absolute;left:22px;top:0;bottom:0;width:2px;background:var(--bd)}
+.tl-item{display:flex;gap:20px;margin-bottom:32px;position:relative}
+.tl-dot{width:12px;height:12px;border-radius:50%;background:var(--g6);border:3px solid var(--sf);box-shadow:0 0 0 2px var(--g6);flex-shrink:0;margin-top:5px;position:relative;z-index:1;margin-left:17px}
+.tl-content{}
+.tl-year{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:13px;color:var(--gold);margin-bottom:2px}
+.tl-text{font-size:15px;color:var(--ts);line-height:1.7}
+.tl-text strong{color:var(--tp);font-weight:600}
+
+/* ──── CONTACT ──── */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.contact-info{display:flex;flex-direction:column;gap:24px}
+.ci-item{display:flex;gap:14px;align-items:start}
+.ci-icon{width:42px;height:42px;background:var(--g1);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ci-icon svg{width:20px;height:20px;stroke:var(--g7);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ci-label{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--tm);margin-bottom:2px}
+.ci-value{font-size:15px;color:var(--tp);line-height:1.5}
+.form{display:flex;flex-direction:column;gap:16px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--tm)}
+.field input,.field textarea,.field select{padding:10px 14px;background:var(--sf);border:1.5px solid var(--bd);border-radius:4px;font-family:'Inter',sans-serif;font-size:14px;color:var(--tp);transition:border-color .2s,box-shadow .2s}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--g6);box-shadow:0 0 0 3px rgba(14,138,77,.12);outline:none}
+.field input.error,.field textarea.error{border-color:var(--danger)}
+.field .err-msg{font-size:12px;color:var(--danger);display:none}
+.field input.error ~ .err-msg,.field textarea.error ~ .err-msg{display:block}
+.field textarea{resize:vertical;min-height:100px}
+.form-submit{align-self:flex-start}
+.form-feedback{padding:12px 16px;border-radius:4px;font-size:14px;font-weight:500;display:none}
+.form-feedback.show{display:block}
+.form-feedback.success{background:var(--g1);color:var(--g7);border:1px solid var(--g2)}
+
+/* ──── FOOTER ──── */
+.footer{background:var(--g9);color:var(--g2);padding:48px 0 28px}
+.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:40px;margin-bottom:32px}
+.footer-brand{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px;color:#fff;margin-bottom:10px}
+.footer-desc{font-size:14px;line-height:1.7;opacity:.7;max-width:340px}
+.footer-col h5{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin-bottom:14px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.footer-col a{font-size:14px;color:var(--g2);transition:color .2s}
+.footer-col a:hover{color:#fff}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:20px;display:flex;justify-content:space-between;align-items:center;font-size:13px;opacity:.5}
+
+/* ──── BACK TO TOP ──── */
+.btt{position:fixed;bottom:28px;right:28px;width:44px;height:44px;background:var(--g7);color:#fff;border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh-m);opacity:0;transform:translateY(12px);transition:opacity .3s,transform .3s,background .2s;z-index:999;pointer-events:none}
+.btt.show{opacity:1;transform:translateY(0);pointer-events:auto}
+.btt:hover{background:var(--g6)}
+.btt svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* ──── REVEAL ──── */
+.reveal{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ──── RESPONSIVE ──── */
+@media(max-width:900px){
+  .hero-content{grid-template-columns:1fr;gap:32px}
+  .hero-stats{flex-direction:row;flex-wrap:wrap;gap:12px}
+  .hero-stat{flex:1;min-width:140px}
+  .about-grid{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr;gap:24px}
+}
+@media(max-width:680px){
+  .nav-links,.nav-cta-wrap{display:none}
+  .burger{display:flex}
+  .nav-links.open{display:flex;flex-direction:column;position:absolute;top:60px;left:0;right:0;background:var(--sf);border-bottom:1px solid var(--bd);padding:16px 28px;box-shadow:var(--sh-m)}
+  .nav-links.open + .nav-cta-wrap{display:block;position:absolute;top:calc(60px + var(--menu-h,200px));left:0;right:0;background:var(--sf);padding:0 28px 16px}
+  .form-row{grid-template-columns:1fr}
+  .hero-stats{flex-direction:column}
+  .services-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .footer-bottom{flex-direction:column;gap:8px;text-align:center}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}.reveal{opacity:1;transform:none}}
+
+/* ──── EBOOK CTA SECTION ──── */
+.ebook-section{background:linear-gradient(135deg,var(--g8) 0%,var(--g7) 100%);color:#fff;position:relative;overflow:hidden}
+.ebook-section::before{content:'';position:absolute;top:-50%;right:-10%;width:60%;height:200%;background:radial-gradient(circle,rgba(212,168,67,.08) 0%,transparent 70%);pointer-events:none}
+.ebook-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:48px;align-items:center;position:relative;z-index:1}
+.ebook-cover-wrap{perspective:1200px;display:flex;justify-content:center}
+.ebook-cover{width:280px;height:380px;background:linear-gradient(135deg,#fff 0%,#f0f4f1 100%);border-radius:4px 14px 14px 4px;box-shadow:-8px 0 20px rgba(0,0,0,.3),0 12px 40px rgba(0,0,0,.4);position:relative;transform:rotateY(-15deg);transition:transform .6s;display:flex;flex-direction:column;padding:32px 24px;border-left:6px solid var(--g7)}
+.ebook-cover:hover{transform:rotateY(-5deg) translateY(-4px)}
+.ebook-cover::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:2px;background:rgba(0,0,0,.1)}
+.ebook-cover-badge{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--g7);margin-bottom:14px}
+.ebook-cover-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:28px;line-height:1.05;color:var(--g9);margin-bottom:6px;text-transform:uppercase}
+.ebook-cover-subtitle{font-family:'Inter',sans-serif;font-size:11px;color:var(--ts);margin-bottom:auto;line-height:1.5}
+.ebook-cover-author{display:flex;align-items:center;gap:8px;padding-top:20px;border-top:1px solid var(--bd);margin-top:20px}
+.ebook-cover-author-mark{width:28px;height:28px;background:var(--g7);border-radius:4px;display:flex;align-items:center;justify-content:center}
+.ebook-cover-author-mark svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ebook-cover-author-name{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;color:var(--g7);letter-spacing:.04em}
+.ebook-cover-author-name small{display:block;font-size:9px;color:var(--tm);font-weight:400;letter-spacing:.1em;text-transform:uppercase}
+.ebook-info h2{color:#fff;margin-bottom:8px}
+.ebook-info .sec-eyebrow{color:var(--gold)}
+.ebook-info .sec-lead{color:rgba(255,255,255,.85);margin-bottom:24px}
+.ebook-features{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:28px}
+.ebook-features li{display:flex;gap:12px;align-items:start;font-size:15px;color:rgba(255,255,255,.9);line-height:1.6}
+.ebook-features li::before{content:'✓';width:22px;height:22px;background:var(--gold);color:var(--g9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;margin-top:1px}
+.ebook-price{display:flex;align-items:end;gap:12px;margin-bottom:24px;padding:20px;background:rgba(0,0,0,.2);border-radius:8px;border:1px solid rgba(212,168,67,.3)}
+.ebook-price-old{font-size:18px;color:rgba(255,255,255,.5);text-decoration:line-through;margin-bottom:6px}
+.ebook-price-current{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:42px;color:var(--gold-l);line-height:1}
+.ebook-price-current small{font-size:14px;color:#fff;font-weight:400;display:block;margin-top:2px}
+.ebook-cta{display:inline-flex;align-items:center;gap:8px;padding:16px 36px;background:var(--gold);color:var(--g9);border:none;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;letter-spacing:.04em;text-transform:uppercase;transition:all .2s;cursor:pointer;text-decoration:none}
+.ebook-cta:hover{background:var(--gold-l);transform:translateY(-2px);box-shadow:0 8px 24px rgba(212,168,67,.4);color:var(--g9)}
+.ebook-cta-ghost{background:transparent;border:1.5px solid rgba(255,255,255,.4);color:#fff;padding:14px 28px;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;margin-left:12px}
+.ebook-cta-ghost:hover{border-color:#fff;background:rgba(255,255,255,.08)}
+.ebook-bonus{display:flex;gap:20px;margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,.15)}
+.ebook-bonus div{font-size:13px;color:rgba(255,255,255,.7);line-height:1.5}
+.ebook-bonus strong{color:var(--gold-l);font-weight:600;display:block;font-size:14px;margin-bottom:2px}
+
+/* ──── EBOOK MODAL (Reader) ──── */
+.ebook-modal{position:fixed;inset:0;z-index:2000;background:rgba(6,47,26,.92);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px}
+.ebook-modal.open{display:flex}
+.ebook-reader{width:100%;max-width:920px;height:90vh;max-height:680px;background:var(--sf);border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.5);display:flex;flex-direction:column;overflow:hidden}
+.ebook-reader-header{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:var(--g8);color:#fff;border-bottom:1px solid var(--g7)}
+.ebook-reader-title{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:16px;letter-spacing:.04em}
+.ebook-reader-progress{flex:1;margin:0 24px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;max-width:300px}
+.ebook-reader-progress-bar{height:100%;background:var(--gold);width:0;transition:width .4s}
+.ebook-reader-page-count{font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(255,255,255,.7)}
+.ebook-close{background:transparent;border:none;color:#fff;width:32px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;transition:background .2s;cursor:pointer}
+.ebook-close:hover{background:rgba(255,255,255,.1)}
+.ebook-close svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
+.ebook-body{flex:1;display:grid;grid-template-columns:200px 1fr;overflow:hidden}
+.ebook-toc{border-right:1px solid var(--bd);background:var(--sa);padding:20px 0;overflow-y:auto}
+.ebook-toc-title{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--tm);padding:0 20px 12px}
+.ebook-toc-item{display:flex;gap:10px;align-items:center;padding:10px 20px;font-size:13.5px;color:var(--ts);cursor:pointer;border-left:2px solid transparent;transition:all .15s}
+.ebook-toc-item:hover{background:var(--g1);color:var(--g7)}
+.ebook-toc-item.active{background:var(--g1);color:var(--g7);border-left-color:var(--g7);font-weight:600}
+.ebook-toc-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--g6);font-weight:600;min-width:24px}
+.ebook-pages{flex:1;display:flex;flex-direction:column;background:var(--sf);position:relative;overflow:hidden}
+.ebook-page-area{flex:1;overflow-y:auto;padding:48px 56px}
+.ebook-page{display:none;max-width:680px;margin:0 auto;color:var(--tp);animation:pageFade .3s ease}
+.ebook-page.active{display:block}
+@keyframes pageFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.ebook-page h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:32px;color:var(--g8);margin-bottom:6px;line-height:1.1}
+.ebook-page h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--g7);margin:24px 0 10px}
+.ebook-page .chapter-num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;display:block}
+.ebook-page p{margin-bottom:14px;line-height:1.85;color:var(--ts);font-size:15.5px}
+.ebook-page ul,.ebook-page ol{margin:14px 0 14px 24px;color:var(--ts);line-height:1.85}
+.ebook-page li{margin-bottom:6px}
+.ebook-page blockquote{border-left:3px solid var(--g6);padding:14px 20px;margin:18px 0;background:var(--g1);border-radius:0 6px 6px 0;font-style:italic;color:var(--tp)}
+.ebook-page blockquote strong{color:var(--g7);font-style:normal;display:block;margin-bottom:4px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-style:normal}
+.ebook-page .callout{padding:18px 22px;background:var(--g1);border:1px solid var(--g2);border-radius:6px;margin:20px 0}
+.ebook-page .callout-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--g7);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.ebook-page .callout p{font-size:14.5px;margin:0}
+.ebook-page .page-stat{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:20px 0}
+.ebook-page .page-stat div{padding:14px;background:var(--sa);border-radius:6px;text-align:center;border:1px solid var(--bd)}
+.ebook-page .page-stat b{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:26px;color:var(--g7);display:block;line-height:1}
+.ebook-page .page-stat span{font-size:11px;color:var(--tm);text-transform:uppercase;letter-spacing:.06em;display:block;margin-top:4px}
+.ebook-page .cover-page{text-align:center;padding-top:60px}
+.ebook-page .cover-page h1{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:46px;line-height:1;color:var(--g9);margin:24px 0 12px;text-transform:uppercase}
+.ebook-page .cover-page .cover-badge{display:inline-block;padding:6px 16px;background:var(--g7);color:#fff;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;border-radius:3px;margin-bottom:18px}
+.ebook-page .cover-page .cover-sub{font-size:18px;color:var(--ts);font-style:italic;margin-bottom:32px}
+.ebook-page .cover-page .cover-line{width:60px;height:3px;background:var(--gold);margin:24px auto}
+.ebook-page .cover-page .cover-author{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.1em;color:var(--g7);text-transform:uppercase}
+.ebook-page .cover-page .cover-author small{display:block;font-size:11px;color:var(--tm);font-weight:400;margin-top:4px;letter-spacing:.18em}
+.ebook-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:var(--sa);border-top:1px solid var(--bd)}
+.ebook-nav-btn{display:flex;align-items:center;gap:6px;padding:10px 18px;background:var(--sf);border:1px solid var(--bd);border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--tp);cursor:pointer;transition:all .2s}
+.ebook-nav-btn:hover:not(:disabled){background:var(--g7);color:#fff;border-color:var(--g7)}
+.ebook-nav-btn:disabled{opacity:.4;cursor:not-allowed}
+.ebook-nav-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.ebook-buy-btn{background:var(--gold);color:var(--g9);border:none;padding:12px 28px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.ebook-buy-btn:hover{background:var(--gold-l);transform:translateY(-1px)}
+
+@media(max-width:900px){
+  .ebook-grid{grid-template-columns:1fr;gap:32px}
+  .ebook-cover{margin:0 auto}
+  .ebook-body{grid-template-columns:1fr}
+  .ebook-toc{display:none}
+  .ebook-page-area{padding:32px 24px}
+  .ebook-page .page-stat{grid-template-columns:1fr}
+  .ebook-bonus{flex-direction:column;gap:14px}
+  .ebook-cta-ghost{margin-left:0;margin-top:10px}
+}
+
+/* ===== RBN additions: logo, language, projects, map, WhatsApp ===== */
+.nav-logo{gap:12px;min-width:max-content}
+.nav-logo-img{width:150px;height:62px;object-fit:contain;object-position:center;background:#fff;border-radius:7px;border:1px solid var(--bd);padding:5px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.nav-logo span{font-weight:800;letter-spacing:-.2px}
+@media(max-width:900px){.nav-logo-img{width:130px;height:55px}}
+@media(max-width:680px){.nav-logo-img{width:115px;height:49px}}
+
+.nav-logo-img{width:44px;height:44px;object-fit:contain;background:#fff;border-radius:5px;border:1px solid var(--bd);padding:2px}
+.lang-wrap{display:flex;align-items:center;gap:6px;margin-left:8px}
+.lang-select{height:36px;padding:0 28px 0 10px;border:1px solid var(--bd);border-radius:5px;background:var(--sf);color:var(--tp);font:600 12px 'Inter',sans-serif}
+.projects-section{background:var(--sa)}
+.project-layout{display:grid;grid-template-columns:280px 1fr;gap:28px;align-items:start}
+.project-filters{display:flex;flex-direction:column;gap:8px;position:sticky;top:90px}
+.project-filter{padding:11px 14px;border:1px solid var(--bd);background:var(--sf);color:var(--ts);border-radius:5px;text-align:left;font:600 14px 'Inter',sans-serif;cursor:pointer;transition:.2s}
+.project-filter:hover,.project-filter.active{background:var(--g7);border-color:var(--g7);color:#fff}
+.project-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.project-card{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:22px;box-shadow:var(--sh-s)}
+.project-card h3{font:700 21px 'Barlow Condensed',sans-serif;color:var(--g8);margin-bottom:6px}
+.project-card .project-company{font-weight:700;color:var(--tp);margin-bottom:8px}
+.project-card p{font-size:14px;color:var(--ts);line-height:1.65}
+.project-empty{grid-column:1/-1;padding:30px;border:1px dashed var(--bs);border-radius:8px;background:var(--sf);color:var(--tm);text-align:center}
+.map-card{margin-top:32px;border:1px solid var(--bd);border-radius:8px;overflow:hidden;background:var(--sf);box-shadow:var(--sh-s)}
+.map-card iframe{display:block;width:100%;height:300px;border:0}
+.map-footer{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:16px 18px}
+.map-footer p{font-size:13px;color:var(--tm)}
+.whatsapp-btn{display:inline-flex;align-items:center;gap:9px;padding:12px 18px;border-radius:5px;background:#25D366;color:#fff;font-weight:700}
+.whatsapp-btn:hover{color:#fff;filter:brightness(.95);transform:translateY(-1px)}
+.contact-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.backend-note{font-size:12px;color:var(--tm);margin-top:6px}
+@media(max-width:900px){
+  .project-layout{grid-template-columns:1fr}
+  .project-filters{position:static;display:flex;flex-direction:row;flex-wrap:wrap}
+  .project-filter{flex:1 1 150px;text-align:center}
+  .project-results{grid-template-columns:1fr}
+  .lang-wrap{margin:10px 0 0}
+}
+@media(max-width:680px){
+  .nav-logo-img{width:38px;height:38px}
+  .map-footer{align-items:stretch;flex-direction:column}
+  .whatsapp-btn{justify-content:center}
+}
+
+
+/* WhatsApp e bandeiras */
+.lang-select{min-width:52px;width:52px;padding:0 5px;text-align:center;font-size:21px;cursor:pointer}
+.whatsapp-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:12px 18px;border-radius:6px;background:#25D366;color:#fff;font-weight:700;transition:.2s}
+.whatsapp-btn:hover{color:#fff;filter:brightness(.95);transform:translateY(-1px);box-shadow:0 6px 18px rgba(37,211,102,.25)}
+.whatsapp-icon{width:21px;height:21px;flex:0 0 21px;display:block}
+.whatsapp-icon circle{fill:#fff}.whatsapp-icon path{fill:#25D366}
+.whatsapp-float{width:52px;height:52px;padding:0;border-radius:50%;background:#25D366;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.whatsapp-float .whatsapp-icon{width:28px;height:28px;flex-basis:28px}
+@media(max-width:680px){.lang-select{min-width:46px;width:46px;font-size:19px}}
+
+</style>
+<link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon.png">
+<link rel="apple-touch-icon" href="/assets/favicon.png">
+</head>
+<body>
+
+<!-- Scroll Progress -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- Nav -->
+<nav class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="nav-logo" aria-label="RBN Automação Industrial">
+      <img src="/assets/logo-rbn-hd.png" class="nav-logo-img" alt="RBN Automação Industrial">
+      <span>RBN Automação</span>
+    </a>
+    <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#sobre" data-i18n="navAbout">Sobre</a></li>
+      <li><a href="#servicos" data-i18n="navServices">Serviços</a></li>
+      <li><a href="#setores" data-i18n="navSectors">Setores</a></li>
+      <li><a href="#trajetoria" data-i18n="navHistory">Trajetória</a></li>
+      <li><a href="#ebook" data-i18n="navEbook">Ebook</a></li>
+      <li><a href="#contato" data-i18n="navContactShort">Contato</a></li>
+    </ul>
+    <div class="nav-cta-wrap"><a href="#contato" class="nav-cta" data-i18n="navContact">Fale Conosco</a></div>
+    <div class="lang-wrap">
+      <label for="languageSelect" class="sr-only">Idioma</label>
+      <select id="languageSelect" class="lang-select" aria-label="Idioma">
+        <option value="pt" aria-label="Português — Brasil">🇧🇷</option>
+        <option value="en" aria-label="English — United States">🇺🇸</option>
+        <option value="es" aria-label="Español — España">🇪🇸</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <canvas id="heroCanvas" aria-hidden="true"></canvas>
+  <div class="wrap hero-content">
+    <div>
+      <div class="hero-eyebrow" data-i18n="heroEyebrow">RBN Automação Industrial</div>
+      <h1 data-i18n="heroTitle">Ciência e tecnologia a serviço das empresas</h1>
+      <p class="hero-desc" data-i18n="heroDesc">Empresa de engenharia em projetos de sistemas de automação, com foco em otimizar qualidade e produtividade por meio de trabalho responsável e recursos tecnológicos.</p>
+      <div class="hero-actions">
+        <a href="#servicos" class="btn btn-primary" data-i18n="heroServices">Conheça nossos serviços</a>
+        <a href="#contato" class="btn btn-outline" data-i18n="heroContact">Fale conosco</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num">25<span class="suffix">+</span></div><div class="hero-stat-label" data-i18n="statYears">Anos de atuação desde 2001</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">12<span class="suffix">+</span></div><div class="hero-stat-label" data-i18n="statAreas">Áreas de atuação</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">PR</div><div class="hero-stat-label" data-i18n="statLocation">Campo Largo — Paraná</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Sobre -->
+<section class="section" id="sobre">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <div class="sec-eyebrow" data-i18n="aboutEyebrow">Quem somos</div>
+        <h2 class="sec-title" data-i18n="aboutTitle">Compromisso com qualidade, produtividade e inovação</h2>
+        <p>A RBN Automação Industrial, empresa de engenharia em projetos de sistemas de automação, vem suprir a grande necessidade das empresas em otimizar qualidade e produtividade.</p>
+        <p>Estamos numa constante busca da satisfação de nossos clientes através do trabalho responsável e da utilização de recursos tecnológicos no campo da automação industrial.</p>
+        <p>Temos a missão de assumir o compromisso de pôr a ciência e a tecnologia à serviço das empresas e da sociedade, obedecendo rigorosamente às normas que melhor se adequam a cada projeto.</p>
+        <p>Nosso objetivo é desenvolver projetos com eficiência, transparência e soluções técnicas que agreguem maior competitividade aos nossos clientes.</p>
+        <p>Desde 2001 estamos trabalhando arduamente para atender e surpreender nossos clientes com nossas soluções.</p>
+      </div>
+      <div class="about-highlights reveal">
+        <div class="highlight"><div class="highlight-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div><h4>Inovação tecnológica</h4><p>Desenvolvemos projetos baseados na constante inovação tecnológica.</p></div></div>
+        <div class="highlight"><div class="highlight-icon"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><h4>Eficiência e transparência</h4><p>Desempenhamos os trabalhos com eficiência e transparência.</p></div></div>
+        <div class="highlight"><div class="highlight-icon"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><h4>Soluções competitivas</h4><p>Provemos soluções competitivas satisfazendo as necessidades do cliente.</p></div></div>
+        <div class="highlight"><div class="highlight-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><div><h4>Clientes de grande porte</h4><p>A grande maioria de nossos clientes são empresas de grande porte, líderes nacionais em seus mercados.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Serviços -->
+<section class="section section--alt" id="servicos">
+  <div class="wrap">
+    <div class="sec-header reveal"><div class="sec-eyebrow" data-i18n="servicesEyebrow">Serviços</div><h2 class="sec-title" data-i18n="servicesTitle">Engenharia na implantação e integração de sistemas de automação</h2><p class="sec-lead" data-i18n="servicesLead">Executamos serviços de engenharia na implantação e integração de sistemas de automação.</p></div>
+    <div class="services-tabs" role="tablist" aria-label="Serviços da RBN">
+      <button class="srv-tab active" type="button" role="tab" aria-selected="true" data-panel="spec" data-i18n="tabSpec">Especificação</button>
+      <button class="srv-tab" type="button" role="tab" aria-selected="false" data-panel="config" data-i18n="tabConfig">Configuração e Programação</button>
+    </div>
+    <div class="srv-panel active" id="panel-spec" role="tabpanel">
+      <div class="srv-cards">
+        <div class="srv-card"><div class="srv-card-dot"></div><div><h4>Hardware de CLP</h4><p>Especificação de hardware de controladores lógicos programáveis.</p></div></div>
+        <div class="srv-card"><div class="srv-card-dot"></div><div><h4>Redes de Comunicação</h4><p>Especificação das redes de comunicação necessárias ao sistema.</p></div></div>
+        <div class="srv-card"><div class="srv-card-dot"></div><div><h4>Sistema Supervisório</h4><p>Especificação do sistema supervisório para monitoramento e controle.</p></div></div>
+        <div class="srv-card"><div class="srv-card-dot"></div><div><h4>Interfaces Homem-Máquina</h4><p>Especificação das interfaces utilizadas pelos operadores.</p></div></div>
+      </div>
+    </div>
+    <div class="srv-panel" id="panel-config" role="tabpanel" hidden>
+      <div class="srv-cards">
+        <div class="srv-card"><div class="srv-card-dot"></div><div><h4>Software de CLP</h4><p>Configuração e programação de software de CLP.</p></div></div>
+        <div class="srv-card"><div class="srv-card-dot"></div><div><h4>Software de Supervisão e Controle</h4><p>Desenvolvimento e configuração de software de supervisão e controle.</p></div></div>
+        <div class="srv-card"><div class="srv-card-dot"></div><div><h4>Redes de Comunicação e Controle</h4><p>Configuração e programação das redes de comunicação e controle.</p></div></div>
+        <div class="srv-card"><div class="srv-card-dot"></div><div><h4>Interfaces Homem-Máquina</h4><p>Configuração e programação das interfaces homem-máquina.</p></div></div>
+        <div class="srv-card"><div class="srv-card-dot"></div><div><h4>Gerenciamento de Produção</h4><p>Configuração de soluções para gerenciamento de produção.</p></div></div>
+        <div class="srv-card"><div class="srv-card-dot"></div><div><h4>Integração com Banco de Dados ou Sistema Corporativo</h4><p>Integração da automação com bancos de dados e sistemas corporativos.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Setores e projetos -->
+<section class="section projects-section" id="setores">
+  <div class="wrap">
+    <div class="sec-header reveal">
+      <div class="sec-eyebrow" data-i18n="sectorsEyebrow">Áreas de atuação</div>
+      <h2 class="sec-title" data-i18n="sectorsTitle">Projetos realizados em diferentes setores</h2>
+      <p class="sec-lead" data-i18n="sectorsLead">Selecione um setor para visualizar as empresas e projetos cadastrados.</p>
+    </div>
+    <div class="project-layout reveal">
+      <div class="project-filters" id="projectFilters" aria-label="Filtros por setor"></div>
+      <div class="project-results" id="projectResults" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Trajetória -->
+<section class="section section--tint" id="trajetoria">
+  <div class="wrap">
+    <div class="sec-header reveal"><div class="sec-eyebrow" data-i18n="historyEyebrow">Nossa Trajetória</div><h2 class="sec-title" data-i18n="historyTitle">Desde 2001, construindo soluções em automação</h2><p class="sec-lead" data-i18n="historyLead">Desde 2001 estamos trabalhando arduamente para atender e surpreender nossos clientes com nossas soluções.</p></div>
+    <div class="about-grid">
+      <div class="about-text reveal"><p>A grande maioria de nossos clientes são empresas de grande porte, líderes nacionais em seus mercados. Desta forma, nossa empresa cresce e também faz nossos clientes progredirem em seus mercados ou manterem a liderança.</p></div>
+      <div class="about-highlights reveal"><div class="highlight"><div class="highlight-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg></div><div><h4>Experiência desde 2001</h4><p>Atuação contínua em projetos de sistemas de automação industrial.</p></div></div><div class="highlight"><div class="highlight-icon"><svg viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg></div><div><h4>Compromisso com o cliente</h4><p>Trabalho responsável para atender e superar as expectativas dos clientes.</p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Contato -->
+<section class="section" id="contato">
+  <div class="wrap">
+    <div class="sec-eyebrow reveal" data-i18n="contactEyebrow">Contato</div>
+    <h2 class="sec-title reveal" data-i18n="contactTitle">Fale com a nossa equipe</h2>
+    <p class="sec-lead reveal" data-i18n="contactLead">Entre em contato para discutir seu próximo projeto de automação industrial.</p>
+
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <div class="ci-item">
+          <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div><div class="ci-label" data-i18n="addressLabel">Endereço</div><div class="ci-value">Rua Gonçalves Dias, 1.189 — Sala 10<br>Centro Comercial Itália<br>Campo Largo — PR</div></div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.11 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+          <div><div class="ci-label" data-i18n="phoneLabel">Telefone</div><div class="ci-value">(41) 3032-3055</div></div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+          <div><div class="ci-label" data-i18n="hoursLabel">Horário</div><div class="ci-value" data-i18n="hoursValue">Segunda a Sexta: 8h às 18h</div></div>
+        </div>
+
+        <div class="contact-actions">
+          <a id="whatsappLink" class="whatsapp-btn" href="https://wa.me/5541995939124" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+            <svg class="whatsapp-icon" viewBox="0 0 32 32" aria-hidden="true">
+              <circle cx="16" cy="16" r="15"/>
+              <path d="M22.8 18.7c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.2-.4-2.3-1.4-.8-.7-1.4-1.6-1.6-1.9-.2-.3 0-.5.2-.7.2-.2.3-.4.5-.5.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6-.1-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.8.8.3 1.4.5 1.9.7.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.2-.6-.4z"/>
+            </svg>
+            <span data-i18n="whatsapp">WhatsApp</span>
+          </a>
+        </div>
+
+        <div class="map-card">
+          <iframe
+            title="Mapa da RBN Automação Industrial"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=Rua%20Gonçalves%20Dias%2C%201189%2C%20Centro%20Comercial%20Itália%2C%20Campo%20Largo%20-%20PR&output=embed">
+          </iframe>
+          <div class="map-footer">
+            <p data-i18n="mapText">Localização da RBN Automação Industrial em Campo Largo, Paraná.</p>
+            <a href="https://www.google.com/maps/search/?api=1&query=Rua+Gonçalves+Dias%2C+1189%2C+Campo+Largo%2C+PR" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-i18n="openMaps">Abrir no Google Maps</a>
+          </div>
+        </div>
+      </div>
+
+      <form class="form reveal" id="contactForm" novalidate>
+        <div class="form-row">
+          <div class="field"><label for="fname" data-i18n="nameLabel">Nome</label><input type="text" id="fname" name="name" required placeholder="Seu nome" data-i18n-placeholder="namePlaceholder"><span class="err-msg" data-i18n="nameError">Informe seu nome</span></div>
+          <div class="field"><label for="femail" data-i18n="emailLabel">E-mail</label><input type="email" id="femail" name="email" required placeholder="email@empresa.com" data-i18n-placeholder="emailPlaceholder"><span class="err-msg" data-i18n="emailError">Informe um e-mail válido</span></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label for="fphone" data-i18n="phoneLabel">Telefone</label><input type="tel" id="fphone" name="phone" placeholder="(41) 99999-9999"><span class="err-msg" data-i18n="phoneError">Informe um telefone</span></div>
+          <div class="field">
+            <label for="fsubject" data-i18n="subjectLabel">Assunto</label>
+            <select id="fsubject" name="subject">
+              <option value="" data-i18n="subjectPlaceholder">Selecione...</option>
+              <option value="Orçamento de Projeto" data-i18n="subjectBudget">Orçamento de Projeto</option>
+              <option value="Consultoria Técnica" data-i18n="subjectConsulting">Consultoria Técnica</option>
+              <option value="Suporte / Manutenção" data-i18n="subjectSupport">Suporte / Manutenção</option>
+              <option value="Parcerias" data-i18n="subjectPartners">Parcerias</option>
+              <option value="Outro" data-i18n="subjectOther">Outro</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label for="fmsg" data-i18n="messageLabel">Mensagem</label><textarea id="fmsg" name="message" required placeholder="Descreva seu projeto ou necessidade..." data-i18n-placeholder="messagePlaceholder"></textarea><span class="err-msg" data-i18n="messageError">Escreva sua mensagem</span></div>
+        <div class="form-feedback" id="formFeedback"></div>
+        <button type="submit" class="btn btn-primary form-submit" style="background:var(--g7);color:#fff" data-i18n="sendMessage">Enviar Mensagem</button>
+        <p class="backend-note" data-i18n="backendNote">O envio é processado pelo backend do site. Configure o SMTP no arquivo .env antes de publicar.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Ebook Section -->
+<section class="section ebook-section" id="ebook">
+  <div class="wrap">
+    <div class="ebook-grid">
+      <div class="ebook-cover-wrap reveal"><div class="ebook-cover"><div class="ebook-cover-badge">RBN Automação Industrial</div><div class="ebook-cover-title">Automação<br>Industrial</div><div class="ebook-cover-subtitle">Conteúdo técnico e informações sobre sistemas de automação industrial.</div><div class="ebook-cover-author"><div class="ebook-cover-author-name">RBN Automação<small>Engenharia Industrial</small></div></div></div></div>
+      <div class="ebook-info reveal"><div class="sec-eyebrow" data-i18n="navEbook">Ebook</div><h2 class="sec-title">Conteúdo técnico da RBN Automação Industrial</h2><p class="sec-lead">Área destinada à apresentação de materiais técnicos, informações e conteúdos relacionados à automação industrial.</p><div class="ebook-bonus"><div><strong>📘 Conteúdo técnico</strong>Materiais sobre automação industrial.</div><div><strong>⚙️ Engenharia</strong>Informações sobre projetos, implantação e integração.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand" data-i18n="footerBrand">RBN Automação Industrial</div>
+        <p class="footer-desc">Empresa de engenharia em projetos de sistemas de automação, em constante busca pela satisfação dos clientes através do trabalho responsável e da inovação tecnológica.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Navegação</h5>
+        <ul>
+          <li><a href="#sobre">Sobre nós</a></li>
+          <li><a href="#servicos" data-i18n="navServices">Serviços</a></li>
+          <li><a href="#setores" data-i18n="navSectors">Setores</a></li>
+          <li><a href="#trajetoria" data-i18n="navHistory">Trajetória</a></li>
+          <li><a href="#contato" data-i18n="navContactShort">Contato</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Serviços</h5>
+        <ul>
+          <li><a href="#servicos">Hardware de CLP</a></li>
+          <li><a href="#servicos">Sistemas SCADA</a></li>
+          <li><a href="#servicos">Redes Industriais</a></li>
+          <li><a href="#servicos">Integração Corporativa</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2001–2026 RBN Automação Industrial</span>
+      <span>Campo Largo, Paraná — Brasil</span>
+    </div>
+  </div>
+</footer>
+
+<a id="whatsappFloat" class="whatsapp-btn whatsapp-float" href="https://wa.me/5541995939124" target="_blank" rel="noopener noreferrer" style="position:fixed;right:28px;bottom:84px;z-index:998" aria-label="WhatsApp" title="WhatsApp">
+<svg class="whatsapp-icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15"/><path d="M22.8 18.7c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.2-.4-2.3-1.4-.8-.7-1.4-1.6-1.6-1.9-.2-.3 0-.5.2-.7.2-.2.3-.4.5-.5.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6-.1-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.8.8.3 1.4.5 1.9.7.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.2-.6-.4z"/></svg></a>
+
+<!-- Back to top -->
+<button class="btt" id="btt" aria-label="Voltar ao topo"><svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg></button>
+
+<!-- Ebook Reader Modal -->
+<div class="ebook-modal" id="ebookModal" role="dialog" aria-modal="true">
+  <div class="ebook-reader">
+    <div class="ebook-reader-header">
+      <div class="ebook-reader-title" data-i18n="ebookReaderTitle">📖 Automação Industrial Descomplicada</div>
+      <div class="ebook-reader-progress"><div class="ebook-reader-progress-bar" id="ebookProgress"></div></div>
+      <div class="ebook-reader-page-count" id="pageCount">1 / 8</div>
+      <button class="ebook-close" id="ebookClose" aria-label="Fechar"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="ebook-body">
+      <div class="ebook-toc" id="ebookToc">
+        <div class="ebook-toc-title">Sumário</div>
+      </div>
+      <div class="ebook-pages">
+        <div class="ebook-page-area" id="ebookPages">
+          <!-- Páginas injetadas via JS -->
+        </div>
+        <div class="ebook-nav">
+          <button class="ebook-nav-btn" id="ebookPrev"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Anterior</button>
+          <button class="ebook-buy-btn" id="ebookBuyBtn">Quero a versão completa →</button>
+          <button class="ebook-nav-btn" id="ebookNext">Próxima <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+(function(){
+  'use strict';
+
+  const I18N = {
+    pt: {
+      heroEyebrow:'RBN Automação Industrial',heroTitle:'Ciência e tecnologia a serviço das empresas',heroDesc:'Empresa de engenharia em projetos de sistemas de automação, com foco em otimizar qualidade e produtividade por meio de trabalho responsável e recursos tecnológicos.',heroServices:'Conheça nossos serviços',heroContact:'Fale conosco',statYears:'Anos de atuação desde 2001',statAreas:'Áreas de atuação',statLocation:'Campo Largo — Paraná',
+      aboutEyebrow:'Quem somos',aboutTitle:'Compromisso com qualidade, produtividade e inovação',servicesEyebrow:'Serviços',servicesTitle:'Engenharia na implantação e integração de sistemas de automação',servicesLead:'Executamos serviços de engenharia na implantação e integração de sistemas de automação.',tabSpec:'Especificação',tabConfig:'Configuração e Programação',historyEyebrow:'Nossa Trajetória',historyTitle:'Desde 2001, construindo soluções em automação',historyLead:'Desde 2001 estamos trabalhando arduamente para atender e surpreender nossos clientes com nossas soluções.',footerBrand:'RBN Automação Industrial',
+      navAbout:'Sobre',navServices:'Serviços',navSectors:'Setores',navHistory:'Trajetória',navEbook:'Ebook',
+      navContact:'Fale Conosco',navContactShort:'Contato',ebookReaderTitle:'📖 Automação Industrial Descomplicada',
+      sectorsEyebrow:'Áreas de atuação',sectorsTitle:'Projetos realizados em diferentes setores',
+      sectorsLead:'Selecione um setor para visualizar as empresas e projetos cadastrados.',
+      contactEyebrow:'Contato',contactTitle:'Fale com a nossa equipe',
+      contactLead:'Entre em contato para discutir seu próximo projeto de automação industrial.',
+      addressLabel:'Endereço',phoneLabel:'Telefone',hoursLabel:'Horário',hoursValue:'Segunda a Sexta: 8h às 18h',
+      whatsapp:'WhatsApp',mapText:'Localização da RBN Automação Industrial em Campo Largo, Paraná.',
+      openMaps:'Abrir no Google Maps',nameLabel:'Nome',emailLabel:'E-mail',subjectLabel:'Assunto',
+      namePlaceholder:'Seu nome',emailPlaceholder:'email@empresa.com',messageLabel:'Mensagem',
+      messagePlaceholder:'Descreva seu projeto ou necessidade...',nameError:'Informe seu nome',
+      emailError:'Informe um e-mail válido',phoneError:'Informe um telefone',messageError:'Escreva sua mensagem',
+      subjectPlaceholder:'Selecione...',subjectBudget:'Orçamento de Projeto',subjectConsulting:'Consultoria Técnica',
+      subjectSupport:'Suporte / Manutenção',subjectPartners:'Parcerias',subjectOther:'Outro',
+      sendMessage:'Enviar Mensagem',
+      backendNote:'O envio é processado pelo backend do site. Configure o SMTP no arquivo .env antes de publicar.',
+      noProjects:'Nenhum projeto/empresa foi cadastrado neste setor ainda.',
+      projectDataNote:'Os arquivos fornecidos informam os setores de atuação, mas não trazem os nomes das empresas atendidas. A estrutura está pronta para receber esses dados sem inventar clientes.',
+      allSectors:'Todos os setores',project:'Projeto',company:'Empresa',scope:'Escopo'
+    },
+    en: {
+      heroEyebrow:'RBN Automação Industrial',heroTitle:'Science and technology at the service of companies',heroDesc:'Engineering company focused on industrial automation systems, improving quality and productivity through responsible work and technology.',heroServices:'Our services',heroContact:'Contact us',statYears:'Years of operation since 2001',statAreas:'Areas of expertise',statLocation:'Campo Largo — Paraná',aboutEyebrow:'About us',aboutTitle:'Commitment to quality, productivity and innovation',servicesEyebrow:'Services',servicesTitle:'Engineering for the implementation and integration of automation systems',servicesLead:'We provide engineering services for the implementation and integration of automation systems.',tabSpec:'Specification',tabConfig:'Configuration and Programming',historyEyebrow:'Our History',historyTitle:'Since 2001, building automation solutions',historyLead:'Since 2001 we have worked hard to serve and exceed our customers’ expectations.',footerBrand:'RBN Automação Industrial',
+      navAbout:'About',navServices:'Services',navSectors:'Sectors',navHistory:'History',navEbook:'Ebook',
+      navContact:'Contact us',navContactShort:'Contact',ebookReaderTitle:'📖 Industrial Automation Made Simple',
+      sectorsEyebrow:'Areas of expertise',sectorsTitle:'Projects across different sectors',
+      sectorsLead:'Select a sector to view the registered companies and projects.',
+      contactEyebrow:'Contact',contactTitle:'Talk to our team',
+      contactLead:'Get in touch to discuss your next industrial automation project.',
+      addressLabel:'Address',phoneLabel:'Phone',hoursLabel:'Hours',hoursValue:'Monday to Friday: 8am to 6pm',
+      whatsapp:'WhatsApp',mapText:'RBN Automação Industrial location in Campo Largo, Paraná, Brazil.',
+      openMaps:'Open in Google Maps',nameLabel:'Name',emailLabel:'Email',subjectLabel:'Subject',
+      namePlaceholder:'Your name',emailPlaceholder:'email@company.com',messageLabel:'Message',
+      messagePlaceholder:'Describe your project or need...',nameError:'Enter your name',
+      emailError:'Enter a valid email',phoneError:'Enter a phone number',messageError:'Write your message',
+      subjectPlaceholder:'Select...',subjectBudget:'Project quotation',subjectConsulting:'Technical consulting',
+      subjectSupport:'Support / Maintenance',subjectPartners:'Partnerships',subjectOther:'Other',
+      sendMessage:'Send message',
+      backendNote:'Submission is processed by the site backend. Configure SMTP in .env before publishing.',
+      noProjects:'No project/company has been registered for this sector yet.',
+      projectDataNote:'The provided files list the sectors of activity but do not contain customer company names. The structure is ready for those records without inventing clients.',
+      allSectors:'All sectors',project:'Project',company:'Company',scope:'Scope'
+    },
+    es: {
+      heroEyebrow:'RBN Automação Industrial',heroTitle:'Ciencia y tecnología al servicio de las empresas',heroDesc:'Empresa de ingeniería especializada en sistemas de automatización industrial para mejorar la calidad y la productividad mediante trabajo responsable y tecnología.',heroServices:'Nuestros servicios',heroContact:'Contáctenos',statYears:'Años de actividad desde 2001',statAreas:'Áreas de actuación',statLocation:'Campo Largo — Paraná',aboutEyebrow:'Quiénes somos',aboutTitle:'Compromiso con la calidad, productividad e innovación',servicesEyebrow:'Servicios',servicesTitle:'Ingeniería para la implantación e integración de sistemas de automatización',servicesLead:'Realizamos servicios de ingeniería para la implantación e integración de sistemas de automatización.',tabSpec:'Especificación',tabConfig:'Configuración y Programación',historyEyebrow:'Nuestra trayectoria',historyTitle:'Desde 2001, construyendo soluciones de automatización',historyLead:'Desde 2001 trabajamos para atender y superar las expectativas de nuestros clientes.',footerBrand:'RBN Automação Industrial',
+      navAbout:'Nosotros',navServices:'Servicios',navSectors:'Sectores',navHistory:'Trayectoria',navEbook:'Ebook',
+      navContact:'Contáctenos',navContactShort:'Contacto',ebookReaderTitle:'📖 Automatización Industrial Simplificada',
+      sectorsEyebrow:'Áreas de actuación',sectorsTitle:'Proyectos realizados en diferentes sectores',
+      sectorsLead:'Seleccione un sector para ver las empresas y proyectos registrados.',
+      contactEyebrow:'Contacto',contactTitle:'Hable con nuestro equipo',
+      contactLead:'Póngase en contacto para hablar sobre su próximo proyecto de automatización industrial.',
+      addressLabel:'Dirección',phoneLabel:'Teléfono',hoursLabel:'Horario',hoursValue:'Lunes a viernes: 8:00 a 18:00',
+      whatsapp:'WhatsApp',mapText:'Ubicación de RBN Automação Industrial en Campo Largo, Paraná, Brasil.',
+      openMaps:'Abrir en Google Maps',nameLabel:'Nombre',emailLabel:'Correo electrónico',subjectLabel:'Asunto',
+      namePlaceholder:'Su nombre',emailPlaceholder:'email@empresa.com',messageLabel:'Mensaje',
+      messagePlaceholder:'Describa su proyecto o necesidad...',nameError:'Indique su nombre',
+      emailError:'Indique un correo válido',phoneError:'Indique un teléfono',messageError:'Escriba su mensaje',
+      subjectPlaceholder:'Seleccione...',subjectBudget:'Presupuesto de proyecto',subjectConsulting:'Consultoría técnica',
+      subjectSupport:'Soporte / Mantenimiento',subjectPartners:'Alianzas',subjectOther:'Otro',
+      sendMessage:'Enviar mensaje',
+      backendNote:'El envío se procesa mediante el backend del sitio. Configure SMTP en .env antes de publicar.',
+      noProjects:'Todavía no hay proyectos/empresas registrados en este sector.',
+      projectDataNote:'Los archivos proporcionados informan los sectores de actuación, pero no contienen los nombres de las empresas atendidas. La estructura está lista para recibir esos datos sin inventar clientes.',
+      allSectors:'Todos los sectores',project:'Proyecto',company:'Empresa',scope:'Alcance'
+    }
+  };
+
+  const sectors = [
+    'Cimento','Automobilística','Alimentícia','Biotecnologia','Argamassa','Química',
+    'Transporte Ferroviário','Transporte Rodoviário','Transporte Portuário',
+    'Fabricação de Artefatos de Fibrocimento','Tratamento de Água e Esgoto','Cal'
+  ];
+
+  const state = { lang: localStorage.getItem('rbn-lang') || 'pt', selected:'Todos os setores', projects:[] };
+
+  function t(key){ return (I18N[state.lang] && I18N[state.lang][key]) || I18N.pt[key] || key; }
+
+  function applyLanguage(){
+    document.documentElement.lang = state.lang === 'pt' ? 'pt-BR' : state.lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (t(key)) el.textContent = t(key);
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.dataset.i18nPlaceholder;
+      if (t(key)) el.placeholder = t(key);
+    });
+    const select = document.getElementById('languageSelect');
+    if(select) select.value = state.lang;
+    renderFilters();
+    renderProjects();
+  }
+
+  function renderFilters(){
+    const box = document.getElementById('projectFilters');
+    if(!box) return;
+    box.innerHTML = '';
+    const bAll = document.createElement('button');
+    bAll.type = 'button';
+    bAll.className = 'project-filter' + (state.selected === 'Todos os setores' ? ' active' : '');
+    bAll.textContent = t('allSectors');
+    bAll.addEventListener('click', () => {
+      state.selected = 'Todos os setores';
+      renderFilters(); renderProjects();
+    });
+    box.appendChild(bAll);
+
+    sectors.forEach(sector => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.dataset.sector = sector;
+      b.className = 'project-filter' + (state.selected === sector ? ' active' : '');
+      b.textContent = translateSector(sector);
+      b.addEventListener('click', () => {
+        state.selected = sector;
+        renderFilters(); renderProjects();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function translateSector(sector){
+    const map = {
+      pt: {'Cimento':'Cimento','Automobilística':'Automobilística','Alimentícia':'Alimentícia','Biotecnologia':'Biotecnologia','Argamassa':'Argamassa','Química':'Química','Transporte Ferroviário':'Transporte Ferroviário','Transporte Rodoviário':'Transporte Rodoviário','Transporte Portuário':'Transporte Portuário','Fabricação de Artefatos de Fibrocimento':'Fabricação de Artefatos de Fibrocimento','Tratamento de Água e Esgoto':'Tratamento de Água e Esgoto','Cal':'Cal'},
+      en: {'Cimento':'Cement','Automobilística':'Automotive','Alimentícia':'Food','Biotecnologia':'Biotechnology','Argamassa':'Mortar','Química':'Chemical','Transporte Ferroviário':'Rail Transportation','Transporte Rodoviário':'Road Transportation','Transporte Portuário':'Port Transportation','Fabricação de Artefatos de Fibrocimento':'Fiber-cement Products','Tratamento de Água e Esgoto':'Water and Wastewater Treatment','Cal':'Lime'},
+      es: {'Cimento':'Cemento','Automobilística':'Automotriz','Alimentícia':'Alimentaria','Biotecnologia':'Biotecnología','Argamassa':'Mortero','Química':'Química','Transporte Ferroviário':'Transporte Ferroviario','Transporte Rodoviário':'Transporte por Carretera','Transporte Portuário':'Transporte Portuario','Fabricação de Artefatos de Fibrocimento':'Fabricación de Productos de Fibrocemento','Tratamento de Água e Esgoto':'Tratamiento de Agua y Aguas Residuales','Cal':'Cal'}
+    };
+    return (map[state.lang] && map[state.lang][sector]) || sector;
+  }
+
+  function renderProjects(){
+    const box = document.getElementById('projectResults');
+    if(!box) return;
+    let items = state.projects;
+    if(state.selected !== 'Todos os setores') items = items.filter(p => p.sector === state.selected);
+    box.innerHTML = '';
+    if(!items.length){
+      const empty = document.createElement('div');
+      empty.className = 'project-empty';
+      empty.innerHTML = '<strong>' + t('noProjects') + '</strong><p style="margin-top:8px">' + t('projectDataNote') + '</p>';
+      box.appendChild(empty);
+      return;
+    }
+    items.forEach(p => {
+      const card = document.createElement('article');
+      card.className = 'project-card';
+      card.innerHTML = '<h3>' + escapeHtml(p.sector || '') + '</h3>' +
+        '<div class="project-company">' + escapeHtml(p.company || t('company')) + '</div>' +
+        '<p>' + escapeHtml(p.description || '') + '</p>' +
+        (p.scope ? '<p><strong>' + t('scope') + ':</strong> ' + escapeHtml(p.scope) + '</p>' : '');
+      box.appendChild(card);
+    });
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+  }
+
+  async function loadProjects(){
+    try {
+      const response = await fetch('/api/projects', { headers:{'Accept':'application/json'} });
+      if(!response.ok) throw new Error('projects');
+      const data = await response.json();
+      state.projects = Array.isArray(data.projects) ? data.projects : [];
+    } catch(e) {
+      state.projects = [];
+    }
+    renderProjects();
+  }
+
+  function setupLanguage(){
+    const select = document.getElementById('languageSelect');
+    if(!select) return;
+    select.value = state.lang;
+    select.addEventListener('change', () => {
+      state.lang = select.value;
+      localStorage.setItem('rbn-lang', state.lang);
+      applyLanguage();
+    });
+  }
+
+  function setupContact(){
+    const form = document.getElementById('contactForm');
+    const feedback = document.getElementById('formFeedback');
+    if(!form) return;
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      [form.fname, form.femail, form.fmsg].forEach(field => field && field.classList.remove('error'));
+      const name = form.fname, email = form.femail, message = form.fmsg;
+      let valid = true;
+      if(!name.value.trim()){name.classList.add('error');valid=false}
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())){email.classList.add('error');valid=false}
+      if(!message.value.trim()){message.classList.add('error');valid=false}
+      if(!valid){
+        feedback.className='form-feedback show';
+        feedback.textContent = state.lang==='en' ? 'Please review the highlighted fields.' : state.lang==='es' ? 'Revise los campos resaltados.' : 'Confira os campos destacados antes de continuar.';
+        return;
+      }
+
+      const button = form.querySelector('button[type=submit]');
+      button.disabled = true;
+      button.style.opacity = '.65';
+      feedback.className='form-feedback show';
+      feedback.textContent = state.lang==='en' ? 'Sending...' : state.lang==='es' ? 'Enviando...' : 'Enviando...';
+
+      try {
+        const payload = {
+          name:name.value.trim(),
+          email:email.value.trim(),
+          phone:form.fphone.value.trim(),
+          subject:form.fsubject.value,
+          message:message.value.trim()
+        };
+        const res = await fetch('/api/contact', {
+          method:'POST',
+          headers:{'Content-Type':'application/json','Accept':'application/json'},
+          body:JSON.stringify(payload)
+        });
+        const data = await res.json().catch(()=>({}));
+        if(!res.ok) throw new Error(data.message || 'send_failed');
+
+        feedback.className='form-feedback show success';
+        feedback.textContent = state.lang==='en' ? 'Message sent successfully.' : state.lang==='es' ? 'Mensaje enviado correctamente.' : 'Mensagem enviada com sucesso.';
+        form.reset();
+      } catch(err) {
+        feedback.className='form-feedback show';
+        feedback.textContent = state.lang==='en'
+          ? 'We could not send the message. Please use WhatsApp or try again later.'
+          : state.lang==='es'
+            ? 'No pudimos enviar el mensaje. Use WhatsApp o inténtelo de nuevo más tarde.'
+            : 'Não foi possível enviar a mensagem. Use o WhatsApp ou tente novamente mais tarde.';
+      } finally {
+        button.disabled = false;
+        button.style.opacity = '';
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    setupLanguage();
+    applyLanguage();
+    loadProjects();
+    setupContact();
+  });
+})();
+</script>
+
+<script>
+(function () {
+  'use strict';
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // Menu mobile
+    const burger = document.getElementById('burger');
+    const navLinks = document.getElementById('navLinks');
+    if (burger && navLinks) {
+      burger.addEventListener('click', function () {
+        burger.classList.toggle('open');
+        navLinks.classList.toggle('open');
+      });
+      navLinks.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+          burger.classList.remove('open');
+          navLinks.classList.remove('open');
+        });
+      });
+    }
+
+    // Navegação com sombra e seção ativa
+    const nav = document.getElementById('nav');
+    const links = document.querySelectorAll('.nav-links a');
+    const sections = document.querySelectorAll('section[id]');
+    function updateNav() {
+      if (nav) nav.classList.toggle('scrolled', window.scrollY > 20);
+      let current = '';
+      sections.forEach(function (section) {
+        if (window.scrollY >= section.offsetTop - 140) current = section.id;
+      });
+      links.forEach(function (link) {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+      });
+    }
+    window.addEventListener('scroll', updateNav, { passive: true });
+    updateNav();
+
+    // Barra de progresso
+    const progress = document.getElementById('scrollProgress');
+    function updateProgress() {
+      if (!progress) return;
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    // Botão voltar ao topo
+    const topButton = document.getElementById('btt');
+    if (topButton) {
+      window.addEventListener('scroll', function () {
+        topButton.classList.toggle('show', window.scrollY > 500);
+      }, { passive: true });
+      topButton.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // Abas de serviços — sem esconder o conteúdo por erro de JS
+    const tabs = document.querySelectorAll('.srv-tab');
+    const panels = document.querySelectorAll('.srv-panel');
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        const target = document.getElementById('panel-' + tab.dataset.panel);
+        if (!target) return;
+        tabs.forEach(function (item) {
+          item.classList.remove('active');
+          item.setAttribute('aria-selected', 'false');
+        });
+        panels.forEach(function (panel) {
+          panel.classList.remove('active');
+          panel.hidden = true;
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        target.classList.add('active');
+        target.hidden = false;
+      });
+    });
+
+    // Validação visual auxiliar. O envio real é tratado pelo backend no script RBN additions.
+    const form = null;
+    const feedback = document.getElementById('formFeedback');
+    if (form) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const name = document.getElementById('fname');
+        const email = document.getElementById('femail');
+        const message = document.getElementById('fmsg');
+        [name, email, message].forEach(function (field) {
+          if (field) field.classList.remove('error');
+        });
+        let valid = true;
+        if (!name || !name.value.trim()) { if (name) name.classList.add('error'); valid = false; }
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { if (email) email.classList.add('error'); valid = false; }
+        if (!message || !message.value.trim()) { if (message) message.classList.add('error'); valid = false; }
+        if (feedback) {
+          feedback.className = 'form-feedback show ' + (valid ? 'success' : '');
+          feedback.textContent = valid ? 'Formulário preenchido corretamente. Para envio real, conecte este formulário a um serviço de e-mail ou backend.' : 'Confira os campos destacados antes de continuar.';
+        }
+      });
+      form.querySelectorAll('input, textarea, select').forEach(function (field) {
+        field.addEventListener('input', function () { field.classList.remove('error'); });
+        field.addEventListener('change', function () { field.classList.remove('error'); });
+      });
+    }
+
+    // Canvas decorativo: se não houver suporte, o site continua funcionando normalmente.
+    const canvas = document.getElementById('heroCanvas');
+    if (canvas && canvas.getContext) {
+      const ctx = canvas.getContext('2d');
+      let width = 0, height = 0, points = [];
+      function resizeCanvas() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        const ratio = window.devicePixelRatio || 1;
+        width = rect.width; height = rect.height;
+        canvas.width = Math.max(1, Math.floor(width * ratio));
+        canvas.height = Math.max(1, Math.floor(height * ratio));
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        points = [];
+        for (let x = 40; x < width; x += 80) {
+          for (let y = 40; y < height; y += 80) {
+            if (Math.random() > 0.35) points.push({ x: x + (Math.random() - .5) * 20, y: y + (Math.random() - .5) * 20 });
+          }
+        }
+      }
+      function drawCanvas() {
+        ctx.clearRect(0, 0, width, height);
+        ctx.strokeStyle = 'rgba(255,255,255,.28)';
+        ctx.fillStyle = 'rgba(255,255,255,.65)';
+        points.forEach(function (a, i) {
+          for (let j = i + 1; j < points.length; j++) {
+            const b = points[j];
+            const dx = a.x - b.x, dy = a.y - b.y;
+            if (Math.hypot(dx, dy) < 100) {
+              ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+            }
+          }
+          ctx.beginPath(); ctx.arc(a.x, a.y, 1.5, 0, Math.PI * 2); ctx.fill();
+        });
+      }
+      resizeCanvas();
+      drawCanvas();
+      window.addEventListener('resize', function () { resizeCanvas(); drawCanvas(); });
+    }
+  });
+})();
+</script>
+</body>
+</html>
